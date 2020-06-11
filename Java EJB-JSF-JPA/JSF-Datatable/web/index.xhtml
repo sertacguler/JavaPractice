@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Personel Tanımlama</title>
+</h:head>
+
+<h:body>
+
+    <p:growl globalOnly="true" id="growl"/>
+    <p:panel>
+        <h:form id="personel_tanimlama_form">
+            <p:panelGrid id="personel_tanimla_grid" columns="3">
+
+                <p:outputLabel value="Adı:"/>
+                <p:inputText id="adi_input" value="#{personelView.personel.ad}"
+                             required="true" requiredMessage="Bu Alan Zorunludur."/>
+                <p:message for="adi_input" display="text,icon"/>
+
+                <p:outputLabel value="Soyadı:"/>
+                <p:inputText id="soyadi_input" value="#{personelView.personel.soyad}"
+                             required="true" requiredMessage="Bu Alan Zorunludur."/>
+                <p:message for="soyadi_input" display="text,icon"/>
+
+                <p:outputLabel value="Doğum Tarihi"/>
+                <p:calendar id="dogum_tarihi_calendar" value="#{personelView.personel.dogumTarihi}"/>
+                <p:message for="dogum_tarihi_calendar" display="text,icon"/>
+
+                <p:outputLabel value="TC Numarası:"/>
+                <p:inputText id="tc_input" value="#{personelView.personel.tcNo}"
+                             maxlength="11"
+                             required="true" requiredMessage="Bu Alan Zorunludur."/>
+                <p:message for="tc_input" display="text,icon"/>
+
+                <p:outputLabel value="Telefon Numarası:"/>
+                <p:inputMask mask="(999) 999-99-99"
+                             id="tel_no_input"
+                             maxlength="15"
+                             value="#{personelView.personel.telNo}"/>
+                <p:message for="tel_no_input" display="text,icon"/>
+
+                <p:outputLabel value="Maaş:"/>
+                <p:spinner id="maas_spinnner"
+                           min="1000"
+                           stepFactor="0.75"
+                           maxlength="15000"
+                           value="#{personelView.personel.maas}"/>
+                <p:message for="maas_spinnner" display="text,icon"/>
+
+                <p:outputLabel value="İşe Giriş Tarihi"/>
+                <p:calendar id="is_giris_calendar" value="#{personelView.personel.iseGirisTarih}"/>
+                <p:message for="is_giris_calendar" display="text,icon"/>
+
+                <p:outputLabel value="Sicil Numarası:"/>
+                <p:inputText id="sicil_input"
+                             maxlength="8"
+                             value="#{personelView.personel.sicilNo}"
+                />
+                <p:message for="sicil_input" display="text,icon"/>
+
+                <p:outputLabel value="Departman:"/>
+                <p:selectOneMenu id="departman_input" value="#{personelView.personel.departman}">
+                    <p:ajax event="itemSelect" update="unvan_input" listener="#{personelView.onDepartmanSelected}"/>
+                    <f:selectItem noSelectionOption="true"
+                                  itemLabel="Seçiniz.."
+                                  itemValue="#{null}"/>
+                    <f:selectItems value="#{personelView.departmanList}"/>
+                </p:selectOneMenu>
+                <p:message for="departman_input" display="text,icon"/>
+
+                <p:outputLabel value="Unvan:"/>
+                <p:selectOneMenu id="unvan_input" value="#{personelView.unvanKey}"
+
+                >
+                    <p:ajax event="itemSelect" listener="#{personelView.onUnvanSelected}"
+                            update="maas_spinnner"/>
+
+                    <f:selectItem noSelectionOption="true"
+                                  itemLabel="Seçiniz.."
+                                  itemValue="#{null}"/>
+
+                    <f:selectItems var="unvan" value="#{personelView.unvanMap.entrySet()}"
+                                   itemLabel="#{unvan.value}" itemValue="#{unvan.key}"/>
+
+                </p:selectOneMenu>
+                <p:message for="unvan_input" display="text,icon"/>
+
+            </p:panelGrid>
+
+            <p:commandButton value="Kaydet"
+                             update="personel_tanimla_grid growl :liste_form:personel_listesi"
+                             actionListener="#{personelView.onKaydet}"/>
+        </h:form>
+    </p:panel>
+
+    <p:panel>
+        <h:form id="liste_form">
+            <p:dataTable id="personel_listesi" var="per" value="#{personelView.personelList}">
+
+                <p:column headerText="Id">
+                    <h:outputText value="#{per.id}"/>
+                </p:column>
+
+                <p:column headerText="Adı">
+                    <h:outputText value="#{per.ad}"/>
+                </p:column>
+
+                <p:column headerText="Soyad">
+                    <h:outputText value="#{per.soyad}"/>
+                </p:column>
+
+                <p:column headerText="Doğum Tarihi">
+                    <h:outputText value="#{per.dogumTarihi}"/>
+                </p:column>
+
+                <p:column headerText="Telefon Numarası">
+                    <h:outputText value="#{per.telNo}"/>
+                </p:column>
+
+                <p:column headerText="Departman">
+                    <h:outputText value="#{per.departman}"/>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+    </p:panel>
+
+</h:body>
+
+</html>
